@@ -378,7 +378,7 @@ SELECT `group`.*, COUNT(account_id) AS count_account
 FROM `group`
 LEFT JOIN group_account USING (group_id)
 GROUP BY group_id
-HAVING COUNT(account_id) < 7 ;
+HAVING COUNT(account_id) < 7;
 
 -- c) Ghép 2 kết quả từ câu a) và câu b).
 SELECT `group`.*, COUNT(account_id) AS count_account
@@ -391,4 +391,4 @@ SELECT `group`.*, COUNT(account_id) AS count_account
 FROM `group`
 LEFT JOIN group_account USING (group_id)
 GROUP BY group_id
-HAVING COUNT(account_id) < 7 ;
+HAVING COUNT(account_id) < 7;
