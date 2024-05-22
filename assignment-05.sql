@@ -273,7 +273,31 @@ FROM c2
 WHERE group_count = (SELECT MAX(group_count) 
 					FROM c2
                     );
--- Question 3: Tạo view có chứa câu hỏi có những content quá dài (content quá 300 từ
--- được coi là quá dài) và xóa nó đi
+		
+-- Question 3: Tạo view có chứa câu hỏi có những content quá dài (content quá 300 từ được coi là quá dài) và xóa nó đi
+CREATE VIEW view_03 AS
+SELECT question.*
+FROM question
+WHERE CHAR_LENGTH(content) > 300;
+
+DROP VIEW view_03;
+
 -- Question 4: Tạo view có chứa danh sách các phòng ban có nhiều nhân viên nhất
+CREATE VIEW view_04 AS
+WITH c4 AS (
+			SELECT  department.*, COUNT(account_id) AS account_count
+			FROM account
+			RIGHT JOIN department USING (department_id)
+			GROUP BY department_id
+                                ) 
+SELECT *
+FROM c4 
+WHERE account_count = (SELECT MAX(account_count)
+					   FROM c4
+                       );
 -- Question 5: Tạo view có chứa tất các các câu hỏi do user họ Nguyễn tạo.
+CREATE VIEW view_05 AS
+SELECT question.*, account.full_name
+FROM question
+LEFT JOIN account  ON question.creator_id = account.account_id
+WHERE full_name LIKE "Nguyễn%";
