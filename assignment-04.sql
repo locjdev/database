@@ -264,12 +264,17 @@ GROUP BY department_name
 HAVING COUNT(*)>3;
 
 -- Question 5: Viết lệnh để lấy ra danh sách câu hỏi được sử dụng trong đề thi nhiều nhất
-SELECT question.*, COUNT(exam_id) AS exam_count
-FROM exam_question
-INNER JOIN question USING (question_id)
-GROUP BY question_id
-ORDER BY exam_count DESC
-LIMIT 1;
+WITH c5 AS (
+			SELECT question.*, COUNT(exam_id) AS exam_count
+			FROM exam_question
+			INNER JOIN question USING (question_id)
+			GROUP BY question_id
+            )
+SELECT *
+FROM c5
+WHERE exam_count = (
+					SELECT MAX(exam_count)
+                    FROM c5);
 
 -- Question 6: Thông kê mỗi category Question được sử dụng trong bao nhiêu Question
 SELECT category_question.*, COUNT(question_id) AS question_count
@@ -284,12 +289,17 @@ RIGHT JOIN question USING (question_id)
 GROUP BY question_id;
 
 -- Question 8: Lấy ra Question có nhiều câu trả lời nhất
-SELECT question.content, COUNT(*) as count_answer
-FROM question
-INNER JOIN answer USING(question_id)
-GROUP BY question_id
-ORDER BY count_answer DESC
-LIMIT 1;
+WITH c8 AS (
+			SELECT question.*, COUNT(*) as count_answer
+			FROM question
+			INNER JOIN answer USING(question_id)
+			GROUP BY question_id
+            )
+SELECT *
+FROM c8 
+WHERE count_answer = (
+					 SELECT MAX(count_answer)
+                     FROM c8);
 
 -- Question 9: Thống kê số lượng account trong mỗi group
 SELECT `group`.*, COUNT(account_id) AS account_count
@@ -298,12 +308,17 @@ LEFT JOIN group_account USING (group_id)
 GROUP BY group_id;
 
 -- Question 10: Tìm chức vụ có ít người nhất
-SELECT  position_name, COUNT(*)
-FROM position
-LEFT JOIN account USING(position_id)
-GROUP BY position_name
-ORDER BY COUNT(*) 
-LIMIT 1;
+WITH c10 AS (
+			SELECT  position_name, COUNT(*) AS account_count
+			FROM position
+			LEFT JOIN account USING(position_id)
+			GROUP BY position_name
+            )
+SELECT position_name
+FROM c10 
+WHERE account_count = (
+						SELECT MIN(account_count)
+                        FROM c10);
 
 -- Question 11: Thống kê mỗi phòng ban có bao nhiêu dev, test, scrum master, PM
 SELECT 
