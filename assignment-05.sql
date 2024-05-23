@@ -280,7 +280,7 @@ SELECT question.*
 FROM question
 WHERE CHAR_LENGTH(content) > 300;
 
-DROP VIEW view_03;
+DELETE FROM view_03;
 
 -- Question 4: Tạo view có chứa danh sách các phòng ban có nhiều nhân viên nhất
 CREATE VIEW view_04 AS
@@ -301,3 +301,13 @@ SELECT question.*, account.full_name
 FROM question
 LEFT JOIN account  ON question.creator_id = account.account_id
 WHERE full_name LIKE "Nguyễn%";
+
+-- C2:
+CREATE OR REPLACE VIEW view_05 AS
+SELECT *
+FROM question
+WHERE creator_id = ANY ( 
+						SELECT account_id
+                        FROM account
+                        WHERE full_name LIKE "Nguyễn%"
+						);
